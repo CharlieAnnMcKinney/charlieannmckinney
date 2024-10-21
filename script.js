@@ -1,11 +1,26 @@
-function filterData() {
- event.preventDefault();
- var startdate = document.getElementById("startdate").value;
- var enddate = document.getElementById("enddate").value;
- console.log("Starting date: " + startdate);
- console.log("Ending date: " + enddate);
- fetch("https://compute.samford.edu/zohauth/clients/data");
+function filterData(event) {
+    event.preventDefault();
+    var startdate = new Date(document.getElementById("startdate").value);
+    var enddate = new Date(document.getElementById("enddate").value);
+    
+    console.log("Starting date: " + startdate);
+    console.log("Ending date: " + enddate);
+    
+    const rows = document.querySelectorAll("#data-table tr:not(:first-child)"); // Select all rows except the header
+
+    rows.forEach(row => {
+        const dateCell = row.cells[3]; // Assuming the date is in the fourth column (index 3)
+        const rowDate = new Date(dateCell.textContent); // Convert the date string to a Date object
+
+        // Check if the row date is within the specified range
+        if (rowDate >= startdate && rowDate <= enddate) {
+            row.style.display = ""; // Show the row
+        } else {
+            row.style.display = "none"; // Hide the row
+        }
+    });
 }
+
 
 async function fetchData() {
     try {
